@@ -9,7 +9,7 @@ const Header = () => {
         <Typography
           variant="h6"
           component={Link}
-          to="/"
+          to="/dashboard"
           style={{ textDecoration: "none", color: "inherit" }}
         >
           SS Cricket
@@ -21,7 +21,7 @@ const Header = () => {
             color="inherit"
             style={{ marginRight: "10px" }}
           >
-            Home
+            Dashboard
           </Button>
           <Button component={Link} to="/" color="inherit">
             Log Out
