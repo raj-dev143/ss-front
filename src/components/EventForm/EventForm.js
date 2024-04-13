@@ -8,7 +8,7 @@ import TextField from "@mui/material/TextField";
 import Stack from "@mui/material/Stack";
 import { Box } from "@mui/material";
 
-import { useAuth0 } from "@auth0/auth0-react";
+// import { useAuth0 } from "@auth0/auth0-react";
 
 const EventForm = ({
   formData,
@@ -17,7 +17,7 @@ const EventForm = ({
   handleClose,
   open,
 }) => {
-  const { user } = useAuth0();
+  // const { user } = useAuth0();
 
   return (
     <Dialog open={open} onClose={handleClose} fullWidth maxWidth="xs">
@@ -29,7 +29,7 @@ const EventForm = ({
               <TextField
                 type="text"
                 name="title"
-                value={user.name}
+                value={formData.title}
                 onChange={handleChange}
                 label="Full Name"
                 required // Add required attribute for validation
