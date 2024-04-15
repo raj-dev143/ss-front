@@ -8,8 +8,6 @@ import TextField from "@mui/material/TextField";
 import Stack from "@mui/material/Stack";
 import { Box } from "@mui/material";
 
-// import { useAuth0 } from "@auth0/auth0-react";
-
 const EventForm = ({
   formData,
   handleChange,
@@ -17,7 +15,7 @@ const EventForm = ({
   handleClose,
   open,
 }) => {
-  // const { user } = useAuth0();
+  const today = new Date().toISOString().slice(0, 16); // Get today's date
 
   return (
     <Dialog open={open} onClose={handleClose} fullWidth maxWidth="xs">
@@ -31,7 +29,15 @@ const EventForm = ({
                 name="title"
                 value={formData.title}
                 onChange={handleChange}
-                label="Full Name"
+                label="Booked For"
+                required // Add required attribute for validation
+              />
+              <TextField
+                type="text"
+                name="bookedBy"
+                value={formData.bookedBy}
+                onChange={handleChange}
+                label="Booked By"
                 required // Add required attribute for validation
               />
               <TextField
@@ -44,6 +50,9 @@ const EventForm = ({
                 InputLabelProps={{
                   shrink: true,
                 }}
+                inputProps={{
+                  min: today, // Set min attribute to today's date
+                }}
               />
               <TextField
                 type="datetime-local"
@@ -55,6 +64,17 @@ const EventForm = ({
                 InputLabelProps={{
                   shrink: true,
                 }}
+                inputProps={{
+                  min: today, // Set min attribute to today's date
+                }}
+              />
+              <TextField
+                type="number"
+                name="charges"
+                value={formData.charges}
+                onChange={handleChange}
+                label="Charges"
+                required // Add required attribute for validation
               />
             </Stack>
           </form>

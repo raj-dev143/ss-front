@@ -16,6 +16,7 @@ const MyCalendar = ({ events, bookedDates, eventStyleGetter }) => {
         endAccessor="end"
         disabledDates={bookedDates}
         eventPropGetter={eventStyleGetter}
+        views={["month", "agenda"]}
       />
     </div>
   );

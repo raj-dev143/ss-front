@@ -68,24 +68,6 @@ function App() {
             >
               SS Cricket
             </Typography>
-            {/* <div style={{ display: "flex", alignItems: "center" }}>
-              {isAuthenticated && (
-                <div
-                  style={{
-                    marginRight: "10px",
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <Avatar alt={user.name} src={user.picture} />
-                  <span style={{ marginLeft: "5px" }}>
-                    Welcome, {user.name}
-                  </span>
-                </div>
-              )}
-            </div> */}
-
             {isAuthenticated ? (
               <div>
                 <Box
@@ -95,7 +77,7 @@ function App() {
                     textAlign: "center",
                   }}
                 >
-                  <Tooltip title="Account settings">
+                  <Tooltip title="Account Settings">
                     <IconButton
                       onClick={handleClick}
                       size="small"

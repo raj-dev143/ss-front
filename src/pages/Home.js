@@ -10,8 +10,10 @@ import { Box } from "@mui/material";
 
 const initialFormState = {
   title: "",
+  bookedBy: "",
   start: "",
-  end: "", // Add end date field
+  end: "",
+  charges: "",
 };
 
 function Home() {
@@ -72,21 +74,27 @@ function Home() {
     e.preventDefault();
 
     // Check if any field is empty
-    if (!formData.title || !formData.start || !formData.end) {
+    if (
+      !formData.title ||
+      !formData.bookedBy ||
+      !formData.start ||
+      !formData.end ||
+      !formData.charges
+    ) {
       toast.error("Please fill out all fields.");
       return;
     }
 
     // Check if the selected date is already booked
-    const selectedDate = moment(formData.start).format("YYYY-MM-DD");
-    if (
-      events.some(
-        (event) => moment(event.start).format("YYYY-MM-DD") === selectedDate
-      )
-    ) {
-      toast.error("This date is already booked. Please select another date.");
-      return;
-    }
+    // const selectedDate = moment(formData.start).format("YYYY-MM-DD");
+    // if (
+    //   events.some(
+    //     (event) => moment(event.start).format("YYYY-MM-DD") === selectedDate
+    //   )
+    // ) {
+    //   toast.error("This date is already booked. Please select another date.");
+    //   return;
+    // }
 
     try {
       const response = await fetch(

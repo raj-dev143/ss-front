@@ -14,3 +14,7 @@ body,
 img {
   max-width: 100%;
 }
+
+.rs-picker-popup.rs-picker-popup-daterange {
+  z-index: 9999;
+}

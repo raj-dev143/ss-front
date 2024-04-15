@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import moment from "moment";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -6,30 +6,91 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
+import TablePagination from "@mui/material/TablePagination";
+import TextField from "@mui/material/TextField";
+import Paper from "@mui/material/Paper";
+import Typography from "@mui/material/Typography";
 
 const EventTable = ({ events }) => {
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+  const filteredEvents = events
+    .filter((event) =>
+      Object.values(event).some(
+        (value) =>
+          typeof value === "string" &&
+          value.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    )
+    .reverse(); // Reverse the array to display the latest entry on top
+
   return (
-    <TableContainer>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>Name</TableCell>
-            <TableCell>Event Date</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {events.map((event) => (
-            <TableRow key={event.id}>
-              <TableCell>{event.title}</TableCell>
+    <Paper elevation={3} style={{ marginBottom: "20px" }}>
+      <TextField
+        label="Search"
+        variant="outlined"
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        style={{ margin: "10px", width: "200px" }}
+      />
+      <TableContainer>
+        <Table>
+          <TableHead>
+            <TableRow>
               <TableCell>
-                {moment(event.start).format("YYYY-MM-DD HH:mm")} -{" "}
-                {moment(event.end).format("YYYY-MM-DD HH:mm")}
+                <Typography variant="h6">Booked For</Typography>
+              </TableCell>
+              <TableCell>
+                <Typography variant="h6">Booked By</Typography>
+              </TableCell>
+              <TableCell>
+                <Typography variant="h6">Duration</Typography>
+              </TableCell>
+              <TableCell>
+                <Typography variant="h6">Charges</Typography>
               </TableCell>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+          </TableHead>
+          <TableBody>
+            {filteredEvents
+              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              .map((event) => (
+                <TableRow key={event.id}>
+                  <TableCell>{event.title}</TableCell>
+                  <TableCell>{event.bookedBy}</TableCell>
+                  <TableCell>
+                    <Typography>
+                      {moment(event.start).format("MMMM D, YYYY, h:mm A")} -{" "}
+                      {moment(event.end).format("MMMM D, YYYY, h:mm A")}
+                    </Typography>
+                  </TableCell>
+                  <TableCell>₹{event.charges}/-</TableCell>
+                </TableRow>
+              ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+      <TablePagination
+        rowsPerPageOptions={[5, 10, 25]}
+        component="div"
+        count={filteredEvents.length}
+        rowsPerPage={rowsPerPage}
+        page={page}
+        onPageChange={handleChangePage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+      />
+    </Paper>
   );
 };
 
