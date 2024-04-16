@@ -24,10 +24,10 @@ img {
   z-index: 9999;
 }
 
-.css-1ex1afd-MuiTableCell-root p {
+.MuiTable-root td p {
   font-size: inherit;
 }
 
-.css-1ygcj2i-MuiTableCell-root h6 {
+.MuiTable-root th h6 {
   font-size: 0.90rem;
 }
