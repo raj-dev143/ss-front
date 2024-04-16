@@ -150,7 +150,7 @@ function App() {
         </AppBar>
         {!isAuthenticated && (
           <div style={{ textAlign: "center", padding: "80px 20px" }}>
-            <img src="../ss-cricket.webp" alt="SS Cricket" />
+            <img src="../ss-cricket.webp" alt="SS Cricket" width={600} height={234}/>
           </div>
         )}
         {isAuthenticated && (

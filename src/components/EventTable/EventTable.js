@@ -55,6 +55,12 @@ const EventTable = ({ events }) => {
                 <Typography variant="h6">Booked By</Typography>
               </TableCell>
               <TableCell>
+                <Typography variant="h6">Ground</Typography>
+              </TableCell>
+              <TableCell>
+                <Typography variant="h6">Ball</Typography>
+              </TableCell>
+              <TableCell>
                 <Typography variant="h6">Duration</Typography>
               </TableCell>
               <TableCell>
@@ -69,6 +75,8 @@ const EventTable = ({ events }) => {
                 <TableRow key={event.id}>
                   <TableCell>{event.title}</TableCell>
                   <TableCell>{event.bookedBy}</TableCell>
+                  <TableCell>{event.ground}</TableCell>
+                  <TableCell>{event.ball}</TableCell>
                   <TableCell>
                     <Typography>
                       {moment(event.start).format("MMMM D, YYYY, h:mm A")} -{" "}

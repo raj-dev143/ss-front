@@ -11,10 +11,23 @@ body,
   color: #fff;
 }
 
+.rbc-agenda-table th {
+  color: #000;
+}
+
 img {
   max-width: 100%;
+  height: auto;
 }
 
 .rs-picker-popup.rs-picker-popup-daterange {
   z-index: 9999;
+}
+
+.css-1ex1afd-MuiTableCell-root p {
+  font-size: inherit;
+}
+
+.css-1ygcj2i-MuiTableCell-root h6 {
+  font-size: 0.90rem;
 }

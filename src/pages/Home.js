@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import moment from "moment";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Button from "@mui/material/Button"; // Import Button from MUI
+import Button from "@mui/material/Button";
 import MyCalendar from "../components/Calendar/Calendar";
 import EventForm from "../components/EventForm/EventForm";
 import EventTable from "../components/EventTable/EventTable";
@@ -14,6 +14,8 @@ const initialFormState = {
   start: "",
   end: "",
   charges: "",
+  ground: "",
+  ball: "", // Add 'ground' field to initial form state
 };
 
 function Home() {
@@ -40,10 +42,6 @@ function Home() {
       const data = await response.json();
       // Convert start and end dates to the specified format
       const formattedData = data.map(({ start, end, ...event }) => ({
-        // start: new moment(event.start).toISOString(),
-        // end: new moment(event.end).toISOString(),
-        // ...event,
-
         start: new Date(Date.parse(start)),
         end: new Date(Date.parse(end)),
         ...event,
@@ -79,22 +77,13 @@ function Home() {
       !formData.bookedBy ||
       !formData.start ||
       !formData.end ||
-      !formData.charges
+      !formData.charges ||
+      !formData.ground ||
+      !formData.ball // Check if 'ground' is empty
     ) {
       toast.error("Please fill out all fields.");
       return;
     }
-
-    // Check if the selected date is already booked
-    // const selectedDate = moment(formData.start).format("YYYY-MM-DD");
-    // if (
-    //   events.some(
-    //     (event) => moment(event.start).format("YYYY-MM-DD") === selectedDate
-    //   )
-    // ) {
-    //   toast.error("This date is already booked. Please select another date.");
-    //   return;
-    // }
 
     try {
       const response = await fetch(
