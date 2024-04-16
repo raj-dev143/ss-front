@@ -149,8 +149,22 @@ function App() {
           </Toolbar>
         </AppBar>
         {!isAuthenticated && (
-          <div style={{ textAlign: "center", padding: "80px 20px" }}>
-            <img src="../ss-cricket.webp" alt="SS Cricket" width={600} height={234}/>
+          <div
+            style={{
+              textAlign: "center",
+              padding: "20px",
+              minHeight: "calc(100vh - 110px)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <img
+              src="../ss-cricket.webp"
+              alt="SS Cricket"
+              width={600}
+              height={234}
+            />
           </div>
         )}
         {isAuthenticated && (

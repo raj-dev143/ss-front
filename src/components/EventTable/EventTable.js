@@ -61,10 +61,10 @@ const EventTable = ({ events }) => {
                 <Typography variant="h6">Ball</Typography>
               </TableCell>
               <TableCell>
-                <Typography variant="h6">Duration</Typography>
+                <Typography variant="h6">Charges</Typography>
               </TableCell>
               <TableCell>
-                <Typography variant="h6">Charges</Typography>
+                <Typography variant="h6">Duration</Typography>
               </TableCell>
             </TableRow>
           </TableHead>
@@ -77,13 +77,13 @@ const EventTable = ({ events }) => {
                   <TableCell>{event.bookedBy}</TableCell>
                   <TableCell>{event.ground}</TableCell>
                   <TableCell>{event.ball}</TableCell>
+                  <TableCell>₹{event.charges}/-</TableCell>
                   <TableCell>
                     <Typography>
                       {moment(event.start).format("MMMM D, YYYY, h:mm A")} -{" "}
                       {moment(event.end).format("MMMM D, YYYY, h:mm A")}
                     </Typography>
                   </TableCell>
-                  <TableCell>₹{event.charges}/-</TableCell>
                 </TableRow>
               ))}
           </TableBody>

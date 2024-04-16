@@ -78,6 +78,16 @@ const EventForm = ({
                 </Grid>
               </Box>
 
+              <TextField
+                type="number"
+                name="charges"
+                value={formData.charges}
+                onChange={handleChange}
+                label="Charges"
+                required
+                fullWidth // Set input field to take 100% width
+              />
+
               <Box sx={{ ml: -2 }}>
                 <Grid container spacing={2}>
                   <Grid item xs={12} sm={6}>
@@ -116,15 +126,6 @@ const EventForm = ({
                   </Grid>
                 </Grid>
               </Box>
-              <TextField
-                type="number"
-                name="charges"
-                value={formData.charges}
-                onChange={handleChange}
-                label="Charges"
-                required
-                fullWidth // Set input field to take 100% width
-              />
             </Stack>
           </form>
         </DialogContent>
