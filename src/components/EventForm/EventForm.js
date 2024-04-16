@@ -19,7 +19,7 @@ const EventForm = ({
   const today = new Date().toISOString().slice(0, 16);
 
   return (
-    <Dialog open={open} onClose={handleClose} fullWidth maxWidth="md">
+    <Dialog open={open} onClose={handleClose} maxWidth="md">
       <DialogTitle style={{ paddingBottom: 0 }}>Book Ground</DialogTitle>
       <Box style={{ flex: 1 }}>
         <DialogContent>
