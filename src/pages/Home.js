@@ -15,22 +15,19 @@ const initialFormState = {
   end: "",
   charges: "",
   ground: "",
-  ball: "", // Add 'ground' field to initial form state
+  ball: "",
 };
 
 function Home() {
-  // State variables
   const [events, setEvents] = useState([]);
   const [formData, setFormData] = useState(initialFormState);
   const [open, setOpen] = useState(false);
   const [bookedDates, setBookedDates] = useState([]);
 
-  // Fetch events on component mount
   useEffect(() => {
     fetchEvents();
   }, []);
 
-  // Fetch events from the API
   const fetchEvents = async () => {
     try {
       const response = await fetch(
@@ -40,7 +37,6 @@ function Home() {
         throw new Error("Failed to fetch events");
       }
       const data = await response.json();
-      // Convert start and end dates to the specified format
       const formattedData = data.map(({ start, end, ...event }) => ({
         start: new Date(Date.parse(start)),
         end: new Date(Date.parse(end)),
@@ -48,7 +44,6 @@ function Home() {
       }));
 
       setEvents(formattedData);
-      // Update booked dates based on fetched events
       const bookedDates = formattedData.map((event) =>
         moment(event.start).format("YYYY-MM-DD")
       );
@@ -59,7 +54,6 @@ function Home() {
     }
   };
 
-  // Event handlers
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -71,7 +65,6 @@ function Home() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Check if any field is empty
     if (
       !formData.title ||
       !formData.bookedBy ||
@@ -79,7 +72,7 @@ function Home() {
       !formData.end ||
       !formData.charges ||
       !formData.ground ||
-      !formData.ball // Check if 'ground' is empty
+      !formData.ball
     ) {
       toast.error("Please fill out all fields.");
       return;
@@ -117,27 +110,52 @@ function Home() {
 
   const handleClose = () => {
     setOpen(false);
+    setFormData(initialFormState);
   };
 
   const eventStyleGetter = (event, start, end, isSelected) => {
-    const backgroundColor = "blue"; // Set a uniform background color for all events
+    const backgroundColor = "blue";
     const today = moment().startOf("day");
     if (moment(event.start).startOf("day").isBefore(today)) {
-      return { style: { backgroundColor: "lightgrey" } }; // Disable past events
+      return { style: { backgroundColor: "lightgrey" } };
     }
     return { style: { backgroundColor } };
+  };
+
+  const handleColumnClick = (start, end) => {
+    // Format the clicked dates to match the format expected by the input fields
+    const formattedStartDate = moment(start).format("YYYY-MM-DDTHH:mm");
+    const formattedEndDate = moment.utc(end).format("YYYY-MM-DDTHH:mm");
+
+    // If a single date is selected, set both start and end dates to the selected date
+    if (moment(start).isSame(end, "day")) {
+      setFormData({
+        ...formData,
+        start: formattedStartDate,
+        end: formattedEndDate,
+      });
+    } else {
+      // If a date range is selected, set start and end dates accordingly
+      setFormData({
+        ...formData,
+        start: formattedStartDate,
+        end: formattedEndDate,
+      });
+    }
+
+    // Open the popup
+    handleOpen();
   };
 
   return (
     <Box sx={{ p: 2 }}>
       <ToastContainer />
-      {/* Calendar component */}
       <MyCalendar
         events={events}
         bookedDates={bookedDates}
         eventStyleGetter={eventStyleGetter}
+        handleColumnClick={handleColumnClick}
       />
-      {/* Button to open add event dialog */}
       <Box textAlign="center">
         <Button
           variant="contained"
@@ -147,7 +165,6 @@ function Home() {
           Book Now
         </Button>
       </Box>
-      {/* Add event dialog */}
       <EventForm
         formData={formData}
         handleChange={handleChange}
@@ -155,7 +172,6 @@ function Home() {
         handleClose={handleClose}
         open={open}
       />
-      {/* Table of events */}
       <EventTable events={events} />
     </Box>
   );

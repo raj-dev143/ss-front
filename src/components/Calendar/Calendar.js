@@ -6,7 +6,17 @@ import "./EventStyle.css";
 
 const localizer = momentLocalizer(moment);
 
-const MyCalendar = ({ events, bookedDates, eventStyleGetter }) => {
+const MyCalendar = ({
+  events,
+  bookedDates,
+  eventStyleGetter,
+  handleColumnClick,
+}) => {
+  const handleSlotSelect = ({ start, end }) => {
+    // Pass the selected column information to the parent component
+    handleColumnClick(start, end);
+  };
+
   return (
     <div className="calendar-container">
       <Calendar
@@ -17,6 +27,8 @@ const MyCalendar = ({ events, bookedDates, eventStyleGetter }) => {
         disabledDates={bookedDates}
         eventPropGetter={eventStyleGetter}
         views={["month", "agenda"]}
+        selectable
+        onSelectSlot={handleSlotSelect} // Call handleSlotSelect when a slot is selected
       />
     </div>
   );
