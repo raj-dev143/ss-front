@@ -58,7 +58,12 @@ function App() {
   return (
     <Router>
       <div>
-        <AppBar position="static">
+        <AppBar
+          position="static"
+          style={{
+            background: "linear-gradient(135deg,  #c2222a 0%,#343c67 100%)",
+          }}
+        >
           <Toolbar style={{ justifyContent: "space-between" }}>
             <Typography
               variant="h6"
