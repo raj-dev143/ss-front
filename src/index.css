@@ -31,3 +31,176 @@ img {
 .MuiTable-root th h6 {
   font-size: 0.90rem;
 }
+
+header.header {
+  background: linear-gradient(135deg, rgb(194, 34, 42) 0%, rgb(52, 60, 103) 100%);
+}
+
+body .rmdp-input {
+  border: 1px solid rgba(0, 0, 0, 0.25);
+  height: 56px;
+  padding: 14px;
+  box-sizing: border-box;
+  color: rgba(0, 0, 0, 0.87);
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+  line-height: 1.4375em;
+}
+
+.rmdp-time-picker.right span:nth-of-type(2)+div,
+.rmdp-time-picker.top span:nth-of-type(2)+div {
+  display: none;
+}
+
+.rmeena {
+  z-index: 99999 !important;
+}
+
+.rmeena+div {
+  z-index: 9999 !important;
+}
+
+.datetime-picker {
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 10px;
+  font-size: 16px;
+}
+
+.datetime-picker input {
+  border: none;
+  outline: none;
+  width: calc(100% - 40px);
+  /* Adjust according to your needs */
+}
+
+.react-datetime-picker__wrapper,
+.react-datetime-picker__inputGroup__input {
+  border: none !important;
+}
+
+.MuiDialog-paper {
+  max-width: 598px !important;
+}
+
+.loginBg {
+  background: url("../public/bg.webp") no-repeat;
+  background-size: cover;
+  background-position: center;
+  min-height: 100vh;
+  padding: 40px;
+  overflow: hidden;
+}
+
+.loginBg,
+.loginBg * {
+  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+}
+
+.loginCenter {
+  border: 14px solid #fff;
+  display: flex;
+  justify-content: right;
+  height: calc(100vh - 80px);
+  height: -webkit-calc(100vh - 80px);
+  height: -moz-calc(100vh - 80px);
+}
+
+.loginRight {
+  background-color: #fff;
+  width: 50%;
+  position: relative;
+}
+
+.loginBtn {
+  position: absolute;
+  right: 35px;
+  top: 35px;
+}
+
+.playerPic {
+  position: absolute;
+  transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
+  -webkit-transform: translateY(-50%);
+  top: 50%;
+  left: -443px;
+}
+
+.ssLogo {
+  height: 100%;
+  align-items: center;
+  -webkit-align-items: center;
+  -moz-align-items: center;
+  justify-content: center;
+  -webkit-justify-content: center;
+  -moz-justify-content: center;
+  display: flex;
+  display: -webkit-flex;
+  display: -moz-flex;
+}
+
+.loginBtn button {
+  padding: 0;
+  border: none;
+}
+
+.ssLogo img {
+  max-width: 450px;
+}
+
+@media screen and (max-width: 1599px) {
+  .ssLogo img {
+    max-width: 280px;
+  }
+
+  .loginBg {
+    padding: 30px;
+  }
+
+  .loginBtn img {
+    max-width: 130px;
+  }
+
+  .loginBtn {
+    top: 20px;
+    right: 20px;
+  }
+
+  .loginCenter {
+    border-width: 10px;
+    height: calc(100vh - 60px);
+  }
+
+}
+
+@media screen and (max-width: 767px) {
+  .playerPic {
+    transform: none;
+    left: 0;
+    bottom: -50px;
+    top: inherit;
+    padding: 0 30px;
+  }
+
+  .ssLogo {
+    align-items: flex-start;
+    padding-top: 100px;
+  }
+
+  .loginBtn img {
+    max-width: 100px;
+  }
+
+  .loginRight {
+    width: 100%;
+  }
+
+  .ssLogo img {
+    max-width: 200px;
+  }
+}

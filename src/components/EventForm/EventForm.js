@@ -6,8 +6,22 @@ import DialogActions from "@mui/material/DialogActions";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Stack from "@mui/material/Stack";
-import { Box, Grid } from "@mui/material";
+import {
+  Box,
+  Grid,
+  RadioGroup,
+  FormControlLabel,
+  Radio,
+  FormLabel,
+  FormControl,
+} from "@mui/material";
 import MenuItem from "@mui/material/MenuItem";
+
+import DatetimePicker from "react-datetime-picker";
+import "react-datetime-picker/dist/DateTimePicker.css";
+import "react-calendar/dist/Calendar.css";
+import "react-clock/dist/Clock.css";
+import Paper from "@mui/material/Paper";
 
 const EventForm = ({
   formData,
@@ -15,12 +29,13 @@ const EventForm = ({
   handleSubmit,
   handleClose,
   open,
+  isEditMode,
 }) => {
-  const today = new Date().toISOString().slice(0, 16);
-
   return (
     <Dialog open={open} onClose={handleClose} maxWidth="md">
-      <DialogTitle style={{ paddingBottom: 0 }}>Book Ground</DialogTitle>
+      <DialogTitle style={{ paddingBottom: 0 }}>
+        {isEditMode ? "Edit Event" : "Book Ground"}
+      </DialogTitle>
       <Box style={{ flex: 1 }}>
         <DialogContent>
           <form onSubmit={handleSubmit}>
@@ -32,7 +47,7 @@ const EventForm = ({
                 onChange={handleChange}
                 label="Booked For"
                 required
-                fullWidth // Set input field to take 100% width
+                fullWidth
               />
               <TextField
                 type="text"
@@ -41,7 +56,7 @@ const EventForm = ({
                 onChange={handleChange}
                 label="Booked By"
                 required
-                fullWidth // Set input field to take 100% width
+                fullWidth
               />
               <Box sx={{ ml: -2 }}>
                 <Grid container spacing={2}>
@@ -53,7 +68,7 @@ const EventForm = ({
                       onChange={handleChange}
                       label="Ground"
                       required
-                      fullWidth // Set input field to take 100% width
+                      fullWidth
                     >
                       <MenuItem value="SSCA">SSCA</MenuItem>
                       <MenuItem value="SS Cricket Commune">
@@ -69,7 +84,7 @@ const EventForm = ({
                       onChange={handleChange}
                       label="Ball"
                       required
-                      fullWidth // Set input field to take 100% width
+                      fullWidth
                     >
                       <MenuItem value="Leather">Leather</MenuItem>
                       <MenuItem value="Tennis">Tennis</MenuItem>
@@ -85,54 +100,82 @@ const EventForm = ({
                 onChange={handleChange}
                 label="Charges"
                 required
-                fullWidth // Set input field to take 100% width
+                fullWidth
               />
 
               <Box sx={{ ml: -2 }}>
                 <Grid container spacing={2}>
                   <Grid item xs={12} sm={6}>
-                    <TextField
-                      type="datetime-local"
-                      name="start"
-                      value={formData.start}
-                      onChange={handleChange}
-                      label="Event Start Date"
-                      required
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
-                      inputProps={{
-                        min: today,
-                      }}
-                      fullWidth // Set input field to take 100% width
-                    />
+                    <Paper elevation={3} sx={{ padding: 2 }}>
+                      <DatetimePicker
+                        onChange={(date) =>
+                          handleChange({
+                            target: { name: "start", value: new Date(date) },
+                          })
+                        }
+                        value={formData.start}
+                        required
+                        label="Event Start Date"
+                        disableClock={false}
+                        format="dd/MM/yyyy hh:mm a"
+                        showLeadingZeros
+                        hourPlaceholder="hh"
+                        calendarIcon={<span className="icon-calendar" />}
+                      />
+                    </Paper>
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <TextField
-                      type="datetime-local"
-                      name="end"
-                      value={formData.end}
-                      onChange={handleChange}
-                      label="Event End Date"
-                      required
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
-                      inputProps={{
-                        min: today,
-                      }}
-                      fullWidth // Set input field to take 100% width
-                    />
+                    <Paper elevation={3} sx={{ padding: 2 }}>
+                      <DatetimePicker
+                        onChange={(date) =>
+                          handleChange({
+                            target: { name: "end", value: new Date(date) },
+                          })
+                        }
+                        value={formData.end}
+                        required
+                        label="Event End Date"
+                        disableClock={false}
+                        format="dd/MM/yyyy hh:mm a"
+                        showLeadingZeros
+                        hourPlaceholder="hh"
+                        calendarIcon={<span className="icon-calendar" />}
+                      />
+                    </Paper>
                   </Grid>
                 </Grid>
               </Box>
+              <FormControl
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  flexDirection: "row",
+                }}
+              >
+                <FormLabel id="">Food:</FormLabel>
+                <RadioGroup
+                  row
+                  aria-label="food"
+                  name="food"
+                  value={formData.food}
+                  onChange={handleChange}
+                  style={{ marginLeft: "15px" }}
+                >
+                  <FormControlLabel
+                    value="Yes"
+                    control={<Radio />}
+                    label="Yes"
+                  />
+                  <FormControlLabel value="No" control={<Radio />} label="No" />
+                </RadioGroup>
+              </FormControl>
             </Stack>
           </form>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
           <Button type="submit" variant="contained" onClick={handleSubmit}>
-            Book Now
+            {isEditMode ? "Save Changes" : "Book Now"}
           </Button>
         </DialogActions>
       </Box>

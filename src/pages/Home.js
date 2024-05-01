@@ -2,11 +2,13 @@ import React, { useState, useEffect } from "react";
 import moment from "moment";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Button from "@mui/material/Button";
 import MyCalendar from "../components/Calendar/Calendar";
 import EventForm from "../components/EventForm/EventForm";
 import EventTable from "../components/EventTable/EventTable";
 import { Box } from "@mui/material";
+import "moment/locale/en-gb";
+
+moment.locale("en-gb");
 
 const initialFormState = {
   title: "",
@@ -16,6 +18,7 @@ const initialFormState = {
   charges: "",
   ground: "",
   ball: "",
+  food: "",
 };
 
 function Home() {
@@ -23,6 +26,8 @@ function Home() {
   const [formData, setFormData] = useState(initialFormState);
   const [open, setOpen] = useState(false);
   const [bookedDates, setBookedDates] = useState([]);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [eventIdToEdit, setEventIdToEdit] = useState(null);
 
   useEffect(() => {
     fetchEvents();
@@ -72,36 +77,62 @@ function Home() {
       !formData.end ||
       !formData.charges ||
       !formData.ground ||
-      !formData.ball
+      !formData.ball ||
+      !formData.food
     ) {
       toast.error("Please fill out all fields.");
       return;
     }
 
+    // Check if end time is greater than start time
+    const startTime = moment(formData.start);
+    const endTime = moment(formData.end);
+    if (endTime.isBefore(startTime)) {
+      toast.error("End time must be greater than start time.");
+      return;
+    }
+
     try {
-      const response = await fetch(
-        `${process.env.REACT_APP_BASE_URL}/api/events`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData),
-        }
-      );
+      const url = isEditMode
+        ? `${process.env.REACT_APP_BASE_URL}/api/events/${eventIdToEdit}`
+        : `${process.env.REACT_APP_BASE_URL}/api/events`;
+
+      const method = isEditMode ? "PUT" : "POST";
+
+      const response = await fetch(url, {
+        method,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
       if (!response.ok) {
-        throw new Error("Failed to add event");
+        throw new Error(
+          isEditMode ? "Failed to update event" : "Failed to add event"
+        );
       }
+
       const data = await response.json();
       const newEvent = data.event;
-      setEvents([...events, newEvent]);
+      if (isEditMode) {
+        const updatedEvents = events.map((event) =>
+          event._id === newEvent._id ? newEvent : event
+        );
+        setEvents(updatedEvents);
+      } else {
+        setEvents([...events, newEvent]);
+      }
       toast.success(data.message);
       setFormData(initialFormState);
       handleClose();
     } catch (error) {
       console.error(error);
-      toast.error("Failed to add event");
+      toast.error(
+        isEditMode ? "Failed to update event" : "Failed to add event"
+      );
     }
+    window.location.reload();
   };
 
   const handleOpen = () => {
@@ -111,6 +142,39 @@ function Home() {
   const handleClose = () => {
     setOpen(false);
     setFormData(initialFormState);
+    setIsEditMode(false);
+    setEventIdToEdit(null);
+  };
+
+  const handleEdit = (eventId) => {
+    const eventToEdit = events.find((event) => event._id === eventId);
+    setFormData(eventToEdit);
+    setIsEditMode(true);
+    setEventIdToEdit(eventId);
+    handleOpen();
+  };
+
+  const handleDelete = async (eventId) => {
+    if (window.confirm("Are you sure you want to delete this event?")) {
+      try {
+        const response = await fetch(
+          `${process.env.REACT_APP_BASE_URL}/api/events/${eventId}`,
+          {
+            method: "DELETE",
+          }
+        );
+        if (!response.ok) {
+          throw new Error("Failed to delete event");
+        }
+        const data = await response.json();
+        const updatedEvents = events.filter((event) => event._id !== eventId);
+        setEvents(updatedEvents);
+        toast.success(data.message);
+      } catch (error) {
+        console.error(error);
+        toast.error("Failed to delete event");
+      }
+    }
   };
 
   const eventStyleGetter = (event, start, end, isSelected) => {
@@ -123,27 +187,18 @@ function Home() {
   };
 
   const handleColumnClick = (start, end) => {
-    // Format the clicked dates to match the format expected by the input fields
     const formattedStartDate = moment(start).format("YYYY-MM-DDTHH:mm");
     const formattedEndDate = moment.utc(end).format("YYYY-MM-DDTHH:mm");
 
-    // If a single date is selected, set both start and end dates to the selected date
-    if (moment(start).isSame(end, "day")) {
-      setFormData({
-        ...formData,
-        start: formattedStartDate,
-        end: formattedEndDate,
-      });
-    } else {
-      // If a date range is selected, set start and end dates accordingly
-      setFormData({
-        ...formData,
-        start: formattedStartDate,
-        end: formattedEndDate,
-      });
-    }
+    // console.log("Start Date:", formattedStartDate);
+    // console.log("End Date:", formattedEndDate);
 
-    // Open the popup
+    setFormData({
+      ...formData,
+      start: formattedStartDate,
+      end: formattedEndDate,
+    });
+
     handleOpen();
   };
 
@@ -156,23 +211,19 @@ function Home() {
         eventStyleGetter={eventStyleGetter}
         handleColumnClick={handleColumnClick}
       />
-      <Box textAlign="center">
-        <Button
-          variant="contained"
-          onClick={handleOpen}
-          style={{ marginBottom: 20 }}
-        >
-          Book Now
-        </Button>
-      </Box>
       <EventForm
         formData={formData}
         handleChange={handleChange}
         handleSubmit={handleSubmit}
         handleClose={handleClose}
         open={open}
+        isEditMode={isEditMode}
       />
-      <EventTable events={events} />
+      <EventTable
+        events={events}
+        handleEdit={handleEdit}
+        handleDelete={handleDelete}
+      />
     </Box>
   );
 }

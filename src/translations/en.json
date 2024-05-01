@@ -1,0 +1,33 @@
+{
+  "app": {
+    "title": "SS Cricket",
+    "logout": "Log Out",
+    "accountSettings": "Account Settings"
+  },
+  "home": {
+    "bookedFor": "Booked For",
+    "bookedBy": "Booked By",
+    "ground": "Ground",
+    "ball": "Ball",
+    "food": "Food",
+    "charges": "Charges",
+    "actions": "Actions"
+  },
+  "eventForm": {
+    "editEvent": "Edit Event",
+    "bookGround": "Book Ground",
+    "title": "Booked For",
+    "bookedBy": "Booked By",
+    "ground": "Ground",
+    "ball": "Ball",
+    "charges": "Charges",
+    "eventStartDate": "Event Start Date",
+    "eventEndDate": "Event End Date",
+    "food": "Food",
+    "yes": "Yes",
+    "no": "No",
+    "cancel": "Cancel",
+    "saveChanges": "Save Changes",
+    "bookNow": "Book Now"
+  }
+}

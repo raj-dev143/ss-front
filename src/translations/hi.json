@@ -1,0 +1,33 @@
+{
+  "app": {
+    "title": "एसएस क्रिकेट",
+    "logout": "लॉग आउट",
+    "accountSettings": "खाता सेटिंग्स"
+  },
+  "home": {
+    "bookedFor": "बुक किया गया",
+    "bookedBy": "बुक किया गया द्वारा",
+    "ground": "ग्राउंड",
+    "ball": "गेंद",
+    "food": "भोजन",
+    "charges": "शुल्क",
+    "actions": "क्रियाएँ"
+  },
+  "eventForm": {
+    "editEvent": "इवेंट संपादित करें",
+    "bookGround": "ग्राउंड बुक करें",
+    "title": "बुक किया गया",
+    "bookedBy": "बुक किया गया द्वारा",
+    "ground": "ग्राउंड",
+    "ball": "गेंद",
+    "charges": "शुल्क",
+    "eventStartDate": "इवेंट शुरू तारीख",
+    "eventEndDate": "इवेंट समाप्ति तारीख",
+    "food": "भोजन",
+    "yes": "हाँ",
+    "no": "नहीं",
+    "cancel": "रद्द करें",
+    "saveChanges": "परिवर्तन सहेजें",
+    "bookNow": "अब बुक करें"
+  }
+}

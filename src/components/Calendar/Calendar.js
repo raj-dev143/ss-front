@@ -1,8 +1,11 @@
 import React from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
+import "moment/locale/en-gb";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "./EventStyle.css";
+
+moment.locale("en-gb");
 
 const localizer = momentLocalizer(moment);
 

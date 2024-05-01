@@ -11,26 +11,11 @@ import {
   Tooltip,
   IconButton,
   Box,
-  Menu,
-  MenuItem,
-  Divider,
-  ListItemIcon,
 } from "@mui/material";
 import { Link } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 
-import Logout from "@mui/icons-material/Logout";
-
 function App() {
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const open = Boolean(anchorEl);
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
   const { user, loginWithRedirect, isAuthenticated, isLoading, logout } =
     useAuth0();
 
@@ -55,15 +40,54 @@ function App() {
     );
   }
 
+  // Check if user is authenticated
+  if (!isAuthenticated) {
+    return (
+      <div className="loginBg">
+        <div className="loginCenter">
+          <div className="loginRight">
+            <div className="loginBtn">
+              <Button color="inherit" onClick={loginWithRedirect}>
+                <img src="../login.svg" alt="Login" title="Login" />
+              </Button>
+            </div>
+            <div className="ssLogo">
+              <img
+                src="../ss-cricket.svg"
+                alt="SS Cricket"
+                title="SS Criccket Commune"
+              />
+            </div>
+            <div className="playerPic">
+              <img src="../player.webp" alt="Player" />
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Check if the user's email is authorized
+  if (
+    user &&
+    !["rajendra.telemart@gmail.com", "rajendra.frontend@gmail.com", "mayank@telemartone.com"].includes(
+      user.email
+    )
+  ) {
+    // If not authorized, log the user out and display a message
+    logout();
+    return (
+      <p>
+        Access denied. You are not authorized to access this application with
+        the email: {user.email}.
+      </p>
+    );
+  }
+
   return (
     <Router>
       <div>
-        <AppBar
-          position="static"
-          style={{
-            background: "linear-gradient(135deg,  #c2222a 0%,#343c67 100%)",
-          }}
-        >
+        <AppBar position="static" className="header">
           <Toolbar style={{ justifyContent: "space-between" }}>
             <Typography
               variant="h6"
@@ -73,110 +97,33 @@ function App() {
             >
               SS Cricket
             </Typography>
-            {isAuthenticated ? (
-              <div>
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    textAlign: "center",
-                  }}
-                >
-                  <Tooltip title="Account Settings">
-                    <IconButton
-                      onClick={handleClick}
-                      size="small"
-                      sx={{ ml: 2 }}
-                      aria-controls={open ? "account-menu" : undefined}
-                      aria-haspopup="true"
-                      aria-expanded={open ? "true" : undefined}
-                    >
-                      <Avatar
-                        sx={{ width: 32, height: 32 }}
-                        alt={user.name}
-                        src={user.picture}
-                      />
-                    </IconButton>
-                  </Tooltip>
-                </Box>
-                <Menu
-                  anchorEl={anchorEl}
-                  id="account-menu"
-                  open={open}
-                  onClose={handleClose}
-                  onClick={handleClose}
-                  PaperProps={{
-                    elevation: 0,
-                    sx: {
-                      overflow: "visible",
-                      filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
-                      mt: 1.5,
-                      "& .MuiAvatar-root": {
-                        width: 32,
-                        height: 32,
-                        ml: -0.5,
-                        mr: 1,
-                      },
-                      "&::before": {
-                        content: '""',
-                        display: "block",
-                        position: "absolute",
-                        top: 0,
-                        right: 14,
-                        width: 10,
-                        height: 10,
-                        bgcolor: "background.paper",
-                        transform: "translateY(-50%) rotate(45deg)",
-                        zIndex: 0,
-                      },
-                    },
-                  }}
-                  transformOrigin={{ horizontal: "right", vertical: "top" }}
-                  anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
-                >
-                  <MenuItem>
-                    <Avatar /> {user.name}
-                  </MenuItem>
-                  <Divider />
-                  <MenuItem onClick={logout}>
-                    <ListItemIcon>
-                      <Logout fontSize="small" />
-                    </ListItemIcon>
-                    Logout
-                  </MenuItem>
-                </Menu>
-              </div>
-            ) : (
-              <Button color="inherit" onClick={loginWithRedirect}>
-                Log In
-              </Button>
-            )}
+            <div>
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  textAlign: "center",
+                }}
+              >
+                <Tooltip title="Account Settings">
+                  <IconButton size="small" sx={{ ml: 2 }}>
+                    <Avatar
+                      sx={{ width: 32, height: 32 }}
+                      alt={user.name}
+                      src={user.picture}
+                    />
+                  </IconButton>
+                </Tooltip>
+              </Box>
+            </div>
+            <Button color="inherit" onClick={logout}>
+              Log Out
+            </Button>
           </Toolbar>
         </AppBar>
-        {!isAuthenticated && (
-          <div
-            style={{
-              textAlign: "center",
-              padding: "20px",
-              minHeight: "calc(100vh - 110px)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <img
-              src="../ss-cricket.webp"
-              alt="SS Cricket"
-              width={600}
-              height={234}
-            />
-          </div>
-        )}
-        {isAuthenticated && (
-          <Routes>
-            <Route path="/" element={<Home />} />
-          </Routes>
-        )}
+        <Routes>
+          <Route path="/" element={<Home />} />
+        </Routes>
       </div>
     </Router>
   );
