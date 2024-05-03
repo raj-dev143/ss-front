@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import Members from "./pages/Members";
@@ -23,6 +23,36 @@ function App() {
     useAuth0();
   const [openMenu, setOpenMenu] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
+  const [authorizedEmails, setAuthorizedEmails] = useState([
+    "rajendra.telemart@gmail.com",
+    "mayank@telemartone.com",
+  ]);
+
+  useEffect(() => {
+    async function fetchAuthorizedEmails() {
+      try {
+        const response = await fetch(
+          `${process.env.REACT_APP_BASE_URL}/api/users`
+        );
+        if (response.ok) {
+          const data = await response.json();
+          const emails = data.map((event) => event.email);
+          setAuthorizedEmails([...authorizedEmails, ...emails]);
+        } else {
+          // Handle error response
+          console.error(
+            "Failed to fetch authorized emails:",
+            response.statusText
+          );
+        }
+      } catch (error) {
+        // Handle fetch error
+        console.error("Error fetching authorized emails:", error);
+      }
+    }
+
+    fetchAuthorizedEmails();
+  }, [authorizedEmails]);
 
   if (isLoading) {
     return (
@@ -71,19 +101,16 @@ function App() {
     );
   }
 
-  if (
-    user &&
-    ![
-      "rajendra.telemart@gmail.com",
-      "rajendra.frontend@gmail.com",
-      "mayank@telemartone.com",
-    ].includes(user.email)
-  ) {
+  if (user && !authorizedEmails.includes(user.email)) {
     logout();
     return (
       <p style={{ textAlign: "center" }}>
         Access denied. You are not authorized to access this application with
-        the email: {user.email}.
+        the email:{" "}
+        <strong style={{ color: "red" }}>
+          <em>{user.email}</em>
+        </strong>
+        .
       </p>
     );
   }
