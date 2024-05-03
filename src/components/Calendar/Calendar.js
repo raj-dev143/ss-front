@@ -16,8 +16,16 @@ const MyCalendar = ({
   handleColumnClick,
 }) => {
   const handleSlotSelect = ({ start, end }) => {
-    // Pass the selected column information to the parent component
-    handleColumnClick(start, end);
+    // Set the start time to 8:00 AM
+    const startTime = new Date(start);
+    startTime.setHours(8, 0, 0, 0);
+
+    // Set the end time to 8:00 PM
+    const endTime = new Date(end);
+    endTime.setHours(20, 0, 0, 0);
+
+    // Pass the adjusted start and end times to the handleColumnClick function
+    handleColumnClick(startTime, endTime);
   };
 
   return (
@@ -29,7 +37,6 @@ const MyCalendar = ({
         endAccessor="end"
         disabledDates={bookedDates}
         eventPropGetter={eventStyleGetter}
-        views={["month", "agenda"]}
         selectable
         onSelectSlot={handleSlotSelect} // Call handleSlotSelect when a slot is selected
       />

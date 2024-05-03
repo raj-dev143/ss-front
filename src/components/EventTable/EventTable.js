@@ -15,9 +15,9 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useAuth0 } from "@auth0/auth0-react";
 
-import "moment/locale/en-gb";
+// import "moment/locale/en-gb";
 
-moment.locale("en-gb");
+// moment.locale("en-gb");
 
 const EventTable = ({ events, handleEdit, handleDelete }) => {
   const [page, setPage] = useState(0);

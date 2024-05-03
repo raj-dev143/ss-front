@@ -61,9 +61,15 @@ function Home() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+    // Convert the date value to ISO string format if it's a date field
+    const updatedValue =
+      name === "start" || name === "end"
+        ? new Date(value).toISOString()
+        : value;
+
     setFormData({
       ...formData,
-      [name]: value,
+      [name]: updatedValue,
     });
   };
 
@@ -186,12 +192,27 @@ function Home() {
     return { style: { backgroundColor } };
   };
 
-  const handleColumnClick = (start, end) => {
-    const formattedStartDate = moment(start).format("YYYY-MM-DDTHH:mm");
-    const formattedEndDate = moment.utc(end).format("YYYY-MM-DDTHH:mm");
+  // const handleColumnClick = (start, end) => {
+  //   const formattedStartDate = moment(start).toISOString();
+  //   const formattedEndDate = moment(end).toISOString();
 
-    // console.log("Start Date:", formattedStartDate);
-    // console.log("End Date:", formattedEndDate);
+  //   setFormData({
+  //     ...formData,
+  //     start: formattedStartDate,
+  //     end: formattedEndDate,
+  //   });
+
+  //   handleOpen();
+  // };
+
+  const handleColumnClick = (start, end) => {
+    const formattedStartDate = moment(start).toISOString();
+    let formattedEndDate = moment(end).toISOString();
+
+    // If it's a multi-day event, subtract one day from the end date
+    if (!moment(start).isSame(end, "day")) {
+      formattedEndDate = moment(end).subtract(1, "day").toISOString();
+    }
 
     setFormData({
       ...formData,

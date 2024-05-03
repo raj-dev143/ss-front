@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
+import Members from "./pages/Members";
 import {
   AppBar,
   Toolbar,
@@ -11,6 +12,8 @@ import {
   Tooltip,
   IconButton,
   Box,
+  Menu,
+  MenuItem,
 } from "@mui/material";
 import { Link } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
@@ -18,6 +21,38 @@ import { useAuth0 } from "@auth0/auth0-react";
 function App() {
   const { user, loginWithRedirect, isAuthenticated, isLoading, logout } =
     useAuth0();
+  const [openMenu, setOpenMenu] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [authorizedEmails, setAuthorizedEmails] = useState([
+    "rajendra.telemart@gmail.com",
+    "mayank@telemartone.com",
+  ]);
+
+  useEffect(() => {
+    async function fetchAuthorizedEmails() {
+      try {
+        const response = await fetch(
+          `${process.env.REACT_APP_BASE_URL}/api/users`
+        );
+        if (response.ok) {
+          const data = await response.json();
+          const emails = data.map((event) => event.email);
+          setAuthorizedEmails([...authorizedEmails, ...emails]);
+        } else {
+          // Handle error response
+          console.error(
+            "Failed to fetch authorized emails:",
+            response.statusText
+          );
+        }
+      } catch (error) {
+        // Handle fetch error
+        console.error("Error fetching authorized emails:", error);
+      }
+    }
+
+    fetchAuthorizedEmails();
+  }, [authorizedEmails]);
 
   if (isLoading) {
     return (
@@ -40,7 +75,6 @@ function App() {
     );
   }
 
-  // Check if user is authenticated
   if (!isAuthenticated) {
     return (
       <div className="loginBg">
@@ -55,7 +89,7 @@ function App() {
               <img
                 src="../ss-cricket.svg"
                 alt="SS Cricket"
-                title="SS Criccket Commune"
+                title="SS Cricket Commune"
               />
             </div>
             <div className="playerPic">
@@ -67,19 +101,12 @@ function App() {
     );
   }
 
-  // Check if the user's email is authorized
-  if (
-    user &&
-    !["rajendra.telemart@gmail.com", "rajendra.frontend@gmail.com", "mayank@telemartone.com"].includes(
-      user.email
-    )
-  ) {
-    // If not authorized, log the user out and display a message
+  if (user && !authorizedEmails.includes(user.email)) {
     logout();
     return (
-      <p>
+      <p style={{textAlign:"center"}}>
         Access denied. You are not authorized to access this application with
-        the email: {user.email}.
+        the email: <strong style={{color:"red"}}><em>{user.email}</em></strong>.
       </p>
     );
   }
@@ -106,7 +133,13 @@ function App() {
                 }}
               >
                 <Tooltip title="Account Settings">
-                  <IconButton size="small" sx={{ ml: 2 }}>
+                  <IconButton
+                    size="small"
+                    onClick={(event) => {
+                      setOpenMenu(true);
+                      setAnchorEl(event.currentTarget);
+                    }}
+                  >
                     <Avatar
                       sx={{ width: 32, height: 32 }}
                       alt={user.name}
@@ -114,15 +147,53 @@ function App() {
                     />
                   </IconButton>
                 </Tooltip>
+                {openMenu && (
+                  <Menu
+                    id="account-menu"
+                    anchorEl={anchorEl}
+                    open={openMenu}
+                    onClose={() => setOpenMenu(false)}
+                    anchorOrigin={{
+                      vertical: "bottom",
+                      horizontal: "right",
+                    }}
+                    transformOrigin={{
+                      vertical: "top",
+                      horizontal: "right",
+                    }}
+                  >
+                    {isAuthenticated &&
+                      (user.email === "rajendra.telemart@gmail.com" ||
+                        user.email === "mayank@telemartone.com") && (
+                        <MenuItem
+                          onClick={() => setOpenMenu(false)}
+                          component={Link}
+                          to="/members"
+                        >
+                          Members
+                        </MenuItem>
+                      )}
+                    <MenuItem
+                      onClick={() => {
+                        setOpenMenu(false);
+                        logout();
+                      }}
+                    >
+                      Log Out
+                    </MenuItem>
+                  </Menu>
+                )}
               </Box>
             </div>
-            <Button color="inherit" onClick={logout}>
-              Log Out
-            </Button>
           </Toolbar>
         </AppBar>
         <Routes>
           <Route path="/" element={<Home />} />
+          {isAuthenticated &&
+            (user.email === "rajendra.telemart@gmail.com" ||
+              user.email === "mayank@telemartone.com") && (
+              <Route path="/members" element={<Members />} />
+            )}
         </Routes>
       </div>
     </Router>
