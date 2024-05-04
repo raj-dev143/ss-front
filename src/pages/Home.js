@@ -138,7 +138,7 @@ function Home() {
         isEditMode ? "Failed to update event" : "Failed to add event"
       );
     }
-    window.location.reload();
+    // window.location.reload();
   };
 
   const handleOpen = () => {
