@@ -1,10 +1,5 @@
-import React, { useState, useEffect } from "react";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Navigate,
-} from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import Members from "./pages/Members";
 import {
@@ -28,39 +23,36 @@ function App() {
     useAuth0();
   const [openMenu, setOpenMenu] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
-  const [authorizedEmails, setAuthorizedEmails] = useState([]);
-  const [showBackToHome, setShowBackToHome] = useState(false);
+  const [authorizedEmails, setAuthorizedEmails] = useState([
+    "rajendra.telemart@gmail.com",
+    "mayank@telemartone.com",
+  ]);
 
   useEffect(() => {
-    const fetchAuthorizedEmails = async () => {
+    async function fetchAuthorizedEmails() {
       try {
         const response = await fetch(
           `${process.env.REACT_APP_BASE_URL}/api/users`
         );
         if (response.ok) {
-          const users = await response.json();
-          const emails = users.map((user) => user.email);
-          // Add the default email
-          emails.push("rajendra.telemart@gmail.com");
-          setAuthorizedEmails(emails);
+          const data = await response.json();
+          const emails = data.map((event) => event.email);
+          setAuthorizedEmails([...authorizedEmails, ...emails]);
         } else {
-          console.error("Failed to fetch authorized emails");
+          // Handle error response
+          console.error(
+            "Failed to fetch authorized emails:",
+            response.statusText
+          );
         }
       } catch (error) {
+        // Handle fetch error
         console.error("Error fetching authorized emails:", error);
       }
-    };
+    }
 
     fetchAuthorizedEmails();
-  }, []);
-
-  useEffect(() => {
-    if (isAuthenticated && user && !authorizedEmails.includes(user.email)) {
-      setShowBackToHome(true);
-    } else {
-      setShowBackToHome(false);
-    }
-  }, [isAuthenticated, user, authorizedEmails]);
+  }, [authorizedEmails]);
 
   if (isLoading) {
     return (
@@ -109,23 +101,20 @@ function App() {
     );
   }
 
-  if (!authorizedEmails.includes(user.email)) {
+  if (
+    user &&
+    ![
+      "rajendra.telemart@gmail.com",
+      "rajendra.frontend@gmail.com",
+      "mayank@telemartone.com",
+    ].includes(user.email)
+  ) {
+    logout();
     return (
-      <div>
-        <p style={{ textAlign: "center" }}>
-          Access denied. You are not authorized to access this application with
-          the email:{" "}
-          <strong style={{ color: "red" }}>
-            <em>{user.email}</em>
-          </strong>
-          .
-        </p>
-        {showBackToHome && (
-          <div style={{ textAlign: "center", marginTop: "20px" }}>
-            <Button onClick={logout}>Back to Home</Button>
-          </div>
-        )}
-      </div>
+      <p style={{ textAlign: "center" }}>
+        Access denied. You are not authorized to access this application with
+        the email: {user.email}.
+      </p>
     );
   }
 
@@ -180,15 +169,17 @@ function App() {
                       horizontal: "right",
                     }}
                   >
-                    {user.email === "rajendra.telemart@gmail.com" && (
-                      <MenuItem
-                        onClick={() => setOpenMenu(false)}
-                        component={Link}
-                        to="/members"
-                      >
-                        Members
-                      </MenuItem>
-                    )}
+                    {isAuthenticated &&
+                      (user.email === "rajendra.telemart@gmail.com" ||
+                        user.email === "mayank@telemartone.com") && (
+                        <MenuItem
+                          onClick={() => setOpenMenu(false)}
+                          component={Link}
+                          to="/members"
+                        >
+                          Members
+                        </MenuItem>
+                      )}
                     <MenuItem
                       onClick={() => {
                         setOpenMenu(false);
@@ -205,11 +196,11 @@ function App() {
         </AppBar>
         <Routes>
           <Route path="/" element={<Home />} />
-          {user.email === "rajendra.telemart@gmail.com" && (
-            <Route path="/members" element={<Members />} />
-          )}
-          {/* Redirect to home if not authorized */}
-          <Route path="/members" element={<Navigate to="/" replace />} />
+          {isAuthenticated &&
+            (user.email === "rajendra.telemart@gmail.com" ||
+              user.email === "mayank@telemartone.com") && (
+              <Route path="/members" element={<Members />} />
+            )}
         </Routes>
       </div>
     </Router>
