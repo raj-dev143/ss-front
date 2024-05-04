@@ -41,6 +41,7 @@ function App() {
           const users = await response.json();
           const emails = users.map((user) => user.email);
           // Add the default email
+          emails.push("mayank@telemartone.com");
           emails.push("rajendra.telemart@gmail.com");
           setAuthorizedEmails(emails);
         } else {
